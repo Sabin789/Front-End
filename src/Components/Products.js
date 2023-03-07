@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
+import { Button, Col,Row ,Card} from "react-bootstrap"
 
 const Products = () => {
 let [prod, setProd]=useState("")
 const fetchProd= async()=>{
-    let url="https://amazon-backend-production-58aa.up.railway.app/products/"
-    console.log(process.env.REACT_APP_BE_URL)
+    let url=process.env.REACT_APP_BE_URL+"/products/"
+
     try{
         let res=await fetch(url)
     
@@ -24,16 +25,35 @@ useEffect(()=>{
     console.log(prod.imageUrl)
 },[])
     return ( <>
+    <Row className="mt-5">
     {prod==="" ?"Loading": prod.map((m)=>{
         return <>
-       < div key={m._id}>
-      <img src={m.imageUrl}alt="product-pic"></img>
-      <p>{m.name}</p>
-      <button >Delete</button>
-      </div>
+    
+        <Col sm={12} md={4}  lg={3}key={m._id}>
+      {/* <img className="prod-pic" src={m.imageUrl}alt="product-pic"></img>
+      <p>{m.name}</p> */}
+
+
+      <Card style={{ width: '18rem' }}>
+      <Card.Img variant="top"  src={m.imageUrl}/>
+      <Card.Body>
+        <Card.Title>{m.name}</Card.Title>
+        <Card.Text className="mt-5">
+          Description:{m.description}
+          <br/>
+          Price:{m.price}
+        </Card.Text>
+        <Button variant="info">Edit</Button>
+      <Button variant="danger">Delete</Button>
+      </Card.Body>
+    </Card>
+      </Col>
+
+
       </>
       
     })}
+    </Row>
     </> );
 }
  
