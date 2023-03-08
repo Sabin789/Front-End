@@ -12,41 +12,47 @@ const[brand,setBrand]=useState("")
 
 const newProduct={name,category,price,description,brand}
 
-useEffect(()=>{
-    console.log(newProduct)
-   },[newProduct])
 
+useEffect(()=>{
+    console.log(name)
+  
+},[name])
 const postProd=async(product)=>{
     let url=process.env.REACT_APP_BE_URL+"/products/"
 
     try{
-        let res= await fetch(url,{
+        const res= await fetch(url,{
             method:"POST",
             headers:{
               "Content-Type":"application/json"
       
             },
             body:JSON.stringify(product)
+
           })
-          if(res.ok){
+         
+ 
           const jsonRes=await res.json()
+          console.log(jsonRes)
+        
           
-          console.log("Posted")
-          }
     }catch(err){
         console.log(err)
     }
 }
-
+const submitProd=(e)=>{
+    e.preventDefault()
+    postProd(newProduct)
+}
 
     return ( <>
-      <Form>
+      <Form onSubmit={()=>console.log("hello")}>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Product Name</Form.Label>
         <Form.Control 
         type="text" 
         placeholder="Enter Product Name" 
-        value={name}
+        value={name.value}
         onChange={(e)=>setName(e.target.value)}/>
       </Form.Group>
 
@@ -55,7 +61,7 @@ const postProd=async(product)=>{
         <Form.Control 
         type="text" 
         placeholder="Product Category" 
-        value={category}
+        value={category.value}
         onChange={(e)=>setCategory(e.target.value)}/>
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -63,7 +69,7 @@ const postProd=async(product)=>{
         <Form.Control 
         type="text" 
         placeholder="Product Description"
-        value={description}
+        value={description.value}
         onChange={(e)=>setDescription(e.target.value)} />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -71,7 +77,7 @@ const postProd=async(product)=>{
         <Form.Control 
         type="text" 
         placeholder="Product Brand" 
-        value={brand}
+        value={brand.value}
         onChange={(e)=>setBrand(e.target.value)}/>
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -79,13 +85,14 @@ const postProd=async(product)=>{
         <Form.Control 
         type="number" 
         placeholder="Product Price"
-        value={price}
+        value={price.value}
         pattern={[0-9]}
         onChange={(e)=>setPrice(parseInt(e.target.value))} />
       </Form.Group>
      
       <Button variant="primary" type="submit"
-      onClick={(e)=>e.preventDefault.then(postProd(newProduct))}>
+      onClick={(e)=>submitProd(e)}
+      >
         Submit
       </Button>
     </Form>

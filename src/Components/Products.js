@@ -1,41 +1,64 @@
 import { useEffect, useState } from "react"
 import { Button, Col,Row ,Card} from "react-bootstrap"
+import ProductModal from "./ProductModal"
 
 const Products = () => {
 let [prod, setProd]=useState("")
+const [id,setId]=useState("")
+const [show, setShow] = useState(false);
+
+const handleClose = () => setShow(false);
+const handleShow = () => setShow(true);
+
+const showAndSet=(i)=>{
+    setId(i)
+    handleShow()
+}
+
 const fetchProd= async()=>{
     let url=process.env.REACT_APP_BE_URL+"/products/"
 
     try{
         let res=await fetch(url)
-    
-
-            const data=await res.json()
-           setProd(data)
-        
-   
+        const data=await res.json()
+        setProd(data)
     }catch(err){
         console.log(err)
     }
 }
-
+const deleteProd=async(id)=>{
+    let url=process.env.REACT_APP_BE_URL+"/products/"+id
+    try{
+     let res= await fetch(url,
+        {
+            method:"DELETE",    
+            headers:{
+              "Content-Type":"application/json"
+      
+            },
+          
+          })
+          if(res.ok){
+            console.log("deleted")
+          }
+    }catch(err){
+        console.log(err)
+    }
+}
 useEffect(()=>{
 
     fetchProd()
-    console.log(prod.imageUrl)
+   console.log(prod)
 },[])
     return ( <>
     <Row className="mt-5">
     {prod==="" ?"Loading": prod.map((m)=>{
+        
         return <>
     
         <Col sm={12} md={4}  lg={3}key={m._id}>
-      {/* <img className="prod-pic" src={m.imageUrl}alt="product-pic"></img>
-      <p>{m.name}</p> */}
-
-
       <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top"  src={m.imageUrl}/>
+     <a href={`https://amazon-backend-production-58aa.up.railway.app/products/${m._id}/pdf`}> <Card.Img variant="top"style={{ height: '14rem' }}  src={m.imageUrl}/></a>
       <Card.Body>
         <Card.Title>{m.name}</Card.Title>
         <Card.Text className="mt-5">
@@ -43,15 +66,15 @@ useEffect(()=>{
           <br/>
           Price:{m.price}
         </Card.Text>
-        <Button variant="info">Edit</Button>
-      <Button variant="danger">Delete</Button>
+        <Button variant="info" onClick={()=>showAndSet(m._id)} >Edit</Button>
+      <Button variant="danger" onClick={()=>deleteProd(m._id)}>Delete</Button>
       </Card.Body>
     </Card>
       </Col>
-
-
+     <ProductModal handleClose={handleClose} show={show} id={id}/>
+ 
       </>
-      
+   
     })}
     </Row>
     </> );
