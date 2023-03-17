@@ -10,6 +10,7 @@ const[price,setPrice]=useState("")
 const[description,setDescription]=useState("")
 const[brand,setBrand]=useState("")
 
+
 const newProduct={name,category,price,description,brand}
 
 
@@ -40,6 +41,8 @@ const postProd=async(product)=>{
         console.log(err)
     }
 }
+
+
 const submitProd=(e)=>{
     e.preventDefault()
     postProd(newProduct)
@@ -89,6 +92,7 @@ const submitProd=(e)=>{
         pattern={[0-9]}
         onChange={(e)=>setPrice(parseInt(e.target.value))} />
       </Form.Group>
+   
      
       <Button variant="primary" type="submit"
       onClick={(e)=>submitProd(e)}

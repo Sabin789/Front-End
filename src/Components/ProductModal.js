@@ -30,6 +30,12 @@ useEffect(()=>{
  getSingle(id)
  
 },[show])
+useEffect(()=>{
+  console.log(prod)
+},[prod])
+useEffect(()=>{
+  console.log(formData)
+},[id])
 const formData = new FormData();
 formData.append("imageUrl", image);
 const postImage=async(image)=>{
@@ -40,8 +46,11 @@ const postImage=async(image)=>{
         method:"POST",
         body:image
         })
+        console.log(url)
         if(res.ok){
+         
             const image=await res.json()
+            
           setProd({...prod,imageUrl:image})
         }
 
